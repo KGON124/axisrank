@@ -82,8 +82,7 @@
   flex-direction: column;
   background: var(--bg-primary);
   border-right: 1px solid var(--border-subtle);
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .left-sidebar__header {
@@ -103,6 +102,8 @@
 
 .left-sidebar__list {
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   padding: 0 var(--space-2);
   display: flex;
   flex-direction: column;
@@ -119,6 +120,7 @@
   transition: all var(--transition-fast);
   position: relative;
   border: 1px solid transparent;
+  flex-shrink: 0;
 }
 
 .project-card:hover {
@@ -270,6 +272,7 @@
 
 .right-sidebar__list {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: var(--space-2);
   display: flex;

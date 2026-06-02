@@ -98,6 +98,7 @@
   position: relative;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.01);
+  flex-shrink: 0;
 }
 
 .ranking-item:hover {
