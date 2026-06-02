@@ -1,0 +1,289 @@
+/* AxisRank Design System */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ---------- Design Tokens ---------- */
+:root {
+  /* Colors - Dark FUI Theme (Default) */
+  --bg-primary: #050508;
+  --bg-secondary: #0a0a0f;
+  --bg-tertiary: #101015;
+  --bg-elevated: rgba(15, 15, 20, 0.85);
+  --bg-hover: rgba(255, 255, 255, 0.05);
+  --bg-active: rgba(255, 255, 255, 0.1);
+
+  /* Glass / Wireframe base */
+  --glass-bg: rgba(5, 5, 8, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-bg-hover: rgba(255, 255, 255, 0.05);
+
+  /* Text */
+  --text-primary: #f0f0f5;
+  --text-secondary: #a0a0b0;
+  --text-tertiary: #606070;
+  --text-muted: #404050;
+  --text-inverse: #050508;
+
+  /* Accent - Orange / Red / Cyan for FUI */
+  --accent-primary: #ff4a3d;
+  --accent-secondary: #ff8b3d;
+  --accent-tertiary: #3dc6ff;
+  --accent-gradient: linear-gradient(135deg, #ff4a3d, #ff8b3d);
+  --accent-gradient-hover: linear-gradient(135deg, #ff6a5d, #ffab5d);
+  --accent-glow: rgba(255, 74, 61, 0.4);
+
+  /* Rank colors */
+  --rank-1: #ffb83d;
+  --rank-2: #c0c0d0;
+  --rank-3: #c2673a;
+  --rank-default: var(--accent-tertiary);
+
+  /* Status */
+  --success: #3dd68c;
+  --warning: #ffb83d;
+  --danger: #ff4a3d;
+  --info: var(--accent-tertiary);
+
+  /* Border */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-default: rgba(255, 255, 255, 0.2);
+  --border-strong: rgba(255, 255, 255, 0.4);
+  --border-accent: rgba(255, 74, 61, 0.6);
+
+  /* Shadow */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.8);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.9);
+  --shadow-glow: 0 0 15px var(--accent-glow);
+
+  /* Map specific */
+  --grid-dot: rgba(61, 198, 255, 0.15);
+  --grid-line: rgba(255, 255, 255, 0.05);
+  --grid-line-strong: rgba(255, 255, 255, 0.2);
+  --item-dot: var(--text-primary);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.12);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="light"] {
+  /* Colors - Light Retro Future Theme */
+  --bg-primary: #f2efe9;
+  --bg-secondary: #eae6df;
+  --bg-tertiary: #dfdbd3;
+  --bg-elevated: rgba(242, 239, 233, 0.85);
+  --bg-hover: rgba(0, 0, 0, 0.05);
+  --bg-active: rgba(0, 0, 0, 0.1);
+
+  /* Glass / Wireframe base */
+  --glass-bg: rgba(242, 239, 233, 0.6);
+  --glass-border: rgba(139, 139, 133, 0.2);
+  --glass-bg-hover: rgba(0, 0, 0, 0.05);
+
+  /* Text */
+  --text-primary: #2d2a26;
+  --text-secondary: #5a5752;
+  --text-tertiary: #7d7a74;
+  --text-muted: #a09d94;
+  --text-inverse: #f2efe9;
+
+  /* Accent - Orange UI Parts */
+  --accent-primary: #ff6b35;
+  --accent-secondary: #e65a28;
+  --accent-tertiary: #ff8b3d;
+  --accent-gradient: linear-gradient(135deg, #ff6b35, #e65a28);
+  --accent-gradient-hover: linear-gradient(135deg, #ff8b3d, #ff6b35);
+  --accent-glow: rgba(255, 107, 53, 0.4);
+
+  /* Rank colors */
+  --rank-1: #e65a28;
+  --rank-2: #8b8b85;
+  --rank-3: #a06020;
+  --rank-default: var(--accent-primary);
+
+  /* Status */
+  --success: #3db874;
+  --warning: #ffb83d;
+  --danger: #ff4a3d;
+  --info: var(--accent-tertiary);
+
+  /* Border - Smoky edges */
+  --border-subtle: rgba(139, 139, 133, 0.2);
+  --border-default: rgba(139, 139, 133, 0.4);
+  --border-strong: rgba(139, 139, 133, 0.6);
+  --border-accent: rgba(255, 107, 53, 0.6);
+
+  /* Shadow */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --shadow-glow: 0 0 15px var(--accent-glow);
+
+  /* Map specific */
+  --grid-dot: rgba(255, 107, 53, 0.2);
+  --grid-line: rgba(0, 0, 0, 0.05);
+  --grid-line-strong: rgba(0, 0, 0, 0.1);
+  --item-dot: var(--accent-primary);
+  --scrollbar-thumb: rgba(0, 0, 0, 0.15);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.25);
+}
+
+:root {
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Typography */
+  --font-family: 'Inter', 'Roboto Mono', Consolas, monospace, sans-serif;
+  --font-size-xs: 10px;
+  --font-size-sm: 12px;
+  --font-size-md: 13px;
+  --font-size-lg: 15px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 22px;
+  --font-size-3xl: 28px;
+
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+
+  /* Radius (Sharp FUI look) */
+  --radius-sm: 0px;
+  --radius-md: 2px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 100ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Layout */
+  --header-height: 48px;
+  --left-sidebar-width: 240px;
+  --right-sidebar-width: 340px;
+}
+
+/* ---------- Global Reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-normal);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* ---------- Selection ---------- */
+::selection {
+  background: var(--accent-primary);
+  color: white;
+}
+
+/* ---------- Focus ---------- */
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* ---------- Links ---------- */
+a {
+  color: var(--accent-secondary);
+  text-decoration: none;
+}
+
+/* ---------- Buttons ---------- */
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* ---------- Inputs ---------- */
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239898b0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 28px;
+}
