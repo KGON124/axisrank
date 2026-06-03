@@ -8,7 +8,7 @@ import type {
   Item,
   ScoreConfig,
 } from "../core/types";
-import { createNewProject, createNewItem } from "../core/types";
+import { createNewProject } from "../core/types";
 import { recalculateProject } from "../core/ranking";
 import { loadState, createDebouncedSave } from "../core/storage";
 
