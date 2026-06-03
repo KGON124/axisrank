@@ -34,13 +34,8 @@ export function recalculateProject(project: Project): Project {
     };
   }
 
-  const xs = placedItems.map((item) => item.x as number);
-  const ys = placedItems.map((item) => item.y as number);
-
-  const minX = Math.min(...xs);
-  const maxX = Math.max(...xs);
-  const minY = Math.min(...ys);
-  const maxY = Math.max(...ys);
+  const cx = project.centerPoint?.x ?? 50;
+  const cy = project.centerPoint?.y ?? 50;
 
   const xWeight = project.axes.x.weight;
   const yWeight = project.axes.y.weight;
@@ -66,11 +61,10 @@ export function recalculateProject(project: Project): Project {
       };
     }
 
-    // Min-max normalization (fallback to 0.5 if all same)
-    let normalizedX =
-      maxX === minX ? 0.5 : (item.x - minX) / (maxX - minX);
-    let normalizedY =
-      maxY === minY ? 0.5 : (item.y - minY) / (maxY - minY);
+    // Normalize based on center point (0.5 mark) with a fixed scale of 100
+    // So distance of 50 from center reaches 0.0 or 1.0. Clamp between 0 and 1.
+    let normalizedX = Math.max(0, Math.min(1, 0.5 + (item.x - cx) / 100));
+    let normalizedY = Math.max(0, Math.min(1, 0.5 + (item.y - cy) / 100));
 
     // Flip for "lower_is_better"
     if (project.axes.x.direction === "lower_is_better") {

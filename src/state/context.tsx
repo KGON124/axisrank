@@ -23,6 +23,7 @@ export type AppAction =
   | { type: "ADD_ITEM"; projectId: string; name: string; description?: string }
   | { type: "UPDATE_ITEM"; projectId: string; itemId: string; updates: Partial<Pick<Item, "name" | "description" | "tags" | "memo">> }
   | { type: "MOVE_ITEM"; projectId: string; itemId: string; x: number; y: number }
+  | { type: "MOVE_CENTER_POINT"; projectId: string; x: number; y: number }
   | { type: "DELETE_ITEM"; projectId: string; itemId: string }
   | { type: "LOAD_STATE"; state: AppState }
   | { type: "SET_THEME"; theme: "dark" | "light" }
@@ -146,6 +147,14 @@ export function appReducer(state: AppState, action: AppAction): AppState {
               }
             : item
         ),
+      }));
+    }
+
+    case "MOVE_CENTER_POINT": {
+      return recalcAndUpdate(state, action.projectId, (project) => ({
+        ...project,
+        centerPoint: { x: action.x, y: action.y },
+        updatedAt: new Date().toISOString(),
       }));
     }
 

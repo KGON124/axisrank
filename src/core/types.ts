@@ -87,6 +87,7 @@ export interface Project {
   axes: AxisConfig;
   rankingConfig: RankingConfig;
   scoreConfig: ScoreConfig;
+  centerPoint?: { x: number; y: number };
   items: Item[];
   createdAt: string;
   updatedAt: string;
@@ -147,6 +148,7 @@ export function createNewProject(name: string, description?: string): Project {
       idealPoint: { x: 100, y: 100 },
     },
     scoreConfig: defaultScoreConfig,
+    centerPoint: { x: 50, y: 50 },
     items: [],
     createdAt: now,
     updatedAt: now,

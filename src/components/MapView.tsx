@@ -227,6 +227,26 @@ export function MapView() {
     [getSvgPoint, toSvgX, toSvgY]
   );
 
+  // --- Center point drag start ---
+  const handleCenterMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const pt = getSvgPoint(e);
+      const cx = project?.centerPoint?.x ?? 50;
+      const cy = project?.centerPoint?.y ?? 50;
+      const svgX = toSvgX(cx);
+      const svgY = toSvgY(cy);
+      setDragState({
+        itemId: "center_point",
+        offsetX: pt.x - svgX,
+        offsetY: pt.y - svgY,
+      });
+      setDragPos({ x: svgX, y: svgY });
+    },
+    [getSvgPoint, toSvgX, toSvgY, project]
+  );
+
   // --- Background mousedown → start pan ---
   const viewStateRef = useRef(viewState);
   viewStateRef.current = viewState;
@@ -295,13 +315,22 @@ export function MapView() {
     if (dragState && dragPos && project) {
       const x = toInternalX(dragPos.x);
       const y = toInternalY(dragPos.y);
-      dispatch({
-        type: "MOVE_ITEM",
-        projectId: project.id,
-        itemId: dragState.itemId,
-        x: Math.round(x * 10) / 10,
-        y: Math.round(y * 10) / 10,
-      });
+      if (dragState.itemId === "center_point") {
+        dispatch({
+          type: "MOVE_CENTER_POINT",
+          projectId: project.id,
+          x: Math.round(x * 10) / 10,
+          y: Math.round(y * 10) / 10,
+        });
+      } else {
+        dispatch({
+          type: "MOVE_ITEM",
+          projectId: project.id,
+          itemId: dragState.itemId,
+          x: Math.round(x * 10) / 10,
+          y: Math.round(y * 10) / 10,
+        });
+      }
       setDragState(null);
       setDragPos(null);
       return;
@@ -412,6 +441,12 @@ export function MapView() {
   const isPanning = panState?.hasMoved;
   const svgHeight = dimensions.height - unplacedAreaHeight;
 
+  const cxVal = project.centerPoint?.x ?? 50;
+  const cyVal = project.centerPoint?.y ?? 50;
+  const isCenterDragging = dragState?.itemId === "center_point";
+  const centerSvgX = isCenterDragging && dragPos ? dragPos.x : toSvgX(cxVal);
+  const centerSvgY = isCenterDragging && dragPos ? dragPos.y : toSvgY(cyVal);
+
   return (
     <div className="map-area" ref={containerRef}>
       <div className="map-container">
@@ -518,30 +553,42 @@ export function MapView() {
               );
             })}
 
-            {/* Radar Concentric Circles at (50, 50) */}
-            <circle cx={toSvgX(50)} cy={toSvgY(50)} r={(mapWidth/DEFAULT_RANGE) * 20 * viewState.zoom} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth={0.5} strokeDasharray="4,4" />
-            <circle cx={toSvgX(50)} cy={toSvgY(50)} r={(mapWidth/DEFAULT_RANGE) * 40 * viewState.zoom} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth={0.5} strokeDasharray="2,6" />
+            {/* Radar Concentric Circles at Center */}
+            <circle cx={centerSvgX} cy={centerSvgY} r={(mapWidth/DEFAULT_RANGE) * 20 * viewState.zoom} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth={0.5} strokeDasharray="4,4" pointerEvents="none" />
+            <circle cx={centerSvgX} cy={centerSvgY} r={(mapWidth/DEFAULT_RANGE) * 40 * viewState.zoom} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth={0.5} strokeDasharray="2,6" pointerEvents="none" />
 
-            {/* Center cross (50, 50) */}
-            <line
-              x1={toSvgX(50)}
-              y1={PADDING.top}
-              x2={toSvgX(50)}
-              y2={PADDING.top + mapHeight}
-              stroke="var(--accent-tertiary)"
-              strokeOpacity={0.4}
-              strokeWidth={1}
-            />
-            <line
-              x1={PADDING.left}
-              y1={toSvgY(50)}
-              x2={PADDING.left + mapWidth}
-              y2={toSvgY(50)}
-              stroke="var(--accent-tertiary)"
-              strokeOpacity={0.4}
-              strokeWidth={1}
-            />
-            <circle cx={toSvgX(50)} cy={toSvgY(50)} r={3} fill="var(--accent-tertiary)" />
+            {/* Draggable Center cross */}
+            <g
+              onMouseDown={handleCenterMouseDown}
+              style={{ cursor: isCenterDragging ? "grabbing" : "grab" }}
+            >
+              {/* Hit Area */}
+              <circle cx={centerSvgX} cy={centerSvgY} r={20} fill="transparent" pointerEvents="all" />
+              <line
+                x1={centerSvgX}
+                y1={PADDING.top}
+                x2={centerSvgX}
+                y2={PADDING.top + mapHeight}
+                stroke="var(--accent-tertiary)"
+                strokeOpacity={0.4}
+                strokeWidth={1}
+                pointerEvents="none"
+              />
+              <line
+                x1={PADDING.left}
+                y1={centerSvgY}
+                x2={PADDING.left + mapWidth}
+                y2={centerSvgY}
+                stroke="var(--accent-tertiary)"
+                strokeOpacity={0.4}
+                strokeWidth={1}
+                pointerEvents="none"
+              />
+              <circle cx={centerSvgX} cy={centerSvgY} r={4} fill="var(--accent-tertiary)" pointerEvents="none" />
+              {isCenterDragging && (
+                <circle cx={centerSvgX} cy={centerSvgY} r={20} fill="none" stroke="var(--accent-tertiary)" strokeWidth={1} strokeDasharray="2,2" pointerEvents="none" opacity={0.5} />
+              )}
+            </g>
 
             {/* --- Items --- */}
             {placedItems.map((item) => {
@@ -589,7 +636,7 @@ export function MapView() {
                     }
                     strokeWidth={isSelected ? 1.5 : 0.5}
                     opacity={isSelected || isHovered ? 1 : 0.2}
-                    style={{ transition: "all 150ms ease" }}
+                    style={{ transition: "opacity 150ms ease, r 150ms ease, fill 150ms ease, stroke 150ms ease, stroke-width 150ms ease" }}
                     pointerEvents="none"
                   />
                   {/* Radial Gradient Glow */}
@@ -599,7 +646,7 @@ export function MapView() {
                     r={ITEM_RADIUS + (isHovered || isSelected ? 4 : 0)}
                     fill={getItemFill(item)}
                     opacity={isHovered || isSelected ? 0.9 : 0.6}
-                    style={{ transition: "all 150ms ease" }}
+                    style={{ transition: "opacity 150ms ease, r 150ms ease, fill 150ms ease, stroke 150ms ease, stroke-width 150ms ease" }}
                     pointerEvents="none"
                   />
                   {/* Center Dot */}
@@ -717,6 +764,7 @@ export function MapView() {
             const x = toSvgX(v);
             if (x < PADDING.left - 5 || x > PADDING.left + mapWidth + 5)
               return null;
+            const displayV = 50 + (v - cxVal);
             return (
               <text
                 key={`tx-${v}`}
@@ -726,7 +774,7 @@ export function MapView() {
                 className="map-label--min-max"
                 pointerEvents="none"
               >
-                {Number.isInteger(v) ? v : v.toFixed(1)}
+                {Number.isInteger(displayV) ? displayV : displayV.toFixed(1)}
               </text>
             );
           })}
@@ -736,6 +784,7 @@ export function MapView() {
             const y = toSvgY(v);
             if (y < PADDING.top - 5 || y > PADDING.top + mapHeight + 5)
               return null;
+            const displayV = 50 + (v - cyVal);
             return (
               <text
                 key={`ty-${v}`}
@@ -745,7 +794,7 @@ export function MapView() {
                 className="map-label--min-max"
                 pointerEvents="none"
               >
-                {Number.isInteger(v) ? v : v.toFixed(1)}
+                {Number.isInteger(displayV) ? displayV : displayV.toFixed(1)}
               </text>
             );
           })}
