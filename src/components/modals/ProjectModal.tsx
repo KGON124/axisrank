@@ -65,7 +65,6 @@ export function ProjectModal({
           onChange={(e) => setName(e.target.value)}
           placeholder="例: AIモデル比較"
           autoFocus
-          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
         />
       </div>
       <div className="form-group">

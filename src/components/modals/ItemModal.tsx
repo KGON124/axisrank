@@ -85,7 +85,6 @@ export function ItemModal({
           onChange={(e) => setName(e.target.value)}
           placeholder="例: GPT-4o"
           autoFocus
-          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
         />
       </div>
       <div className="form-group">
@@ -103,7 +102,6 @@ export function ItemModal({
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://..."
-          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
         />
       </div>
       <div className="form-group">
