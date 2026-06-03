@@ -6,9 +6,10 @@ import { Modal } from "./Modal";
 interface ItemModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (name: string, description?: string, tags?: string[], memo?: string) => void;
+  onSubmit: (name: string, description?: string, url?: string, tags?: string[], memo?: string) => void;
   initialName?: string;
   initialDescription?: string;
+  initialUrl?: string;
   initialTags?: string[];
   initialMemo?: string;
   mode: "add" | "edit";
@@ -20,12 +21,14 @@ export function ItemModal({
   onSubmit,
   initialName = "",
   initialDescription = "",
+  initialUrl = "",
   initialTags = [],
   initialMemo = "",
   mode,
 }: ItemModalProps) {
   const [name, setName] = useState(initialName);
   const [description, setDescription] = useState(initialDescription);
+  const [url, setUrl] = useState(initialUrl);
   const [tagsStr, setTagsStr] = useState(initialTags.join(", "));
   const [memo, setMemo] = useState(initialMemo);
 
@@ -36,6 +39,7 @@ export function ItemModal({
     if (isOpen) {
       setName(initialName);
       setDescription(initialDescription);
+      setUrl(initialUrl);
       setTagsStr(initialTags.join(", "));
       setMemo(initialMemo);
     }
@@ -49,7 +53,7 @@ export function ItemModal({
       .split(",")
       .map((t) => t.trim())
       .filter((t) => t.length > 0);
-    onSubmit(trimmed, description.trim() || undefined, tags, memo.trim() || undefined);
+    onSubmit(trimmed, description.trim() || undefined, url.trim() || undefined, tags, memo.trim() || undefined);
     onClose();
   };
 
@@ -90,6 +94,16 @@ export function ItemModal({
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="要素の説明..."
+        />
+      </div>
+      <div className="form-group">
+        <label className="form-group__label">URL（任意）</label>
+        <input
+          type="url"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="https://..."
+          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
         />
       </div>
       <div className="form-group">

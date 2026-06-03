@@ -20,8 +20,8 @@ export type AppAction =
   | { type: "DELETE_PROJECT"; projectId: string }
   | { type: "SET_CURRENT_PROJECT"; projectId: string }
   | { type: "UPDATE_AXES"; projectId: string; axes: AxisConfig }
-  | { type: "ADD_ITEM"; projectId: string; name: string; description?: string }
-  | { type: "UPDATE_ITEM"; projectId: string; itemId: string; updates: Partial<Pick<Item, "name" | "description" | "tags" | "memo">> }
+  | { type: "ADD_ITEM"; projectId: string; item: Omit<Item, "id" | "createdAt" | "updatedAt" | "x" | "y"> }
+  | { type: "UPDATE_ITEM"; projectId: string; itemId: string; updates: Partial<Pick<Item, "name" | "description" | "tags" | "memo" | "url">> }
   | { type: "MOVE_ITEM"; projectId: string; itemId: string; x: number; y: number }
   | { type: "MOVE_CENTER_POINT"; projectId: string; x: number; y: number }
   | { type: "DELETE_ITEM"; projectId: string; itemId: string }
@@ -112,7 +112,16 @@ export function appReducer(state: AppState, action: AppAction): AppState {
     }
 
     case "ADD_ITEM": {
-      const newItem = createNewItem(action.name, action.description);
+      const now = new Date().toISOString();
+      const newItem: Item = {
+        ...action.item,
+        id: crypto.randomUUID(),
+        x: null,
+        y: null,
+        createdAt: now,
+        updatedAt: now,
+        tags: action.item.tags ?? [],
+      };
       return recalcAndUpdate(state, action.projectId, (project) => ({
         ...project,
         items: [...project.items, newItem],

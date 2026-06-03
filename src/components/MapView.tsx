@@ -706,7 +706,8 @@ export function MapView() {
                         x={cx + 40}
                         y={cy - 120}
                         width={220}
-                        height={76}
+                        height={200}
+                        style={{ overflow: "visible" }}
                       >
                         <div style={{
                           background: "var(--glass-bg)",
@@ -721,12 +722,30 @@ export function MapView() {
                           pointerEvents: "auto",
                           display: "flex",
                           flexDirection: "column",
-                          gap: "4px"
+                          gap: "4px",
+                          width: "100%",
+                          maxHeight: "200px",
+                          overflowY: "auto",
                         }}>
                           <div style={{ fontSize: "12px", fontWeight: "bold", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "4px", marginBottom: "2px", display: "flex", justifyContent: "space-between" }}>
                             <span>{item.name}</span>
                             <span style={{ color: "var(--accent-primary)", fontFamily: "monospace" }}>#{item.rank ?? "-"}</span>
                           </div>
+                          
+                          {item.description && (
+                            <div style={{ fontSize: "10px", color: "var(--text-secondary)", marginBottom: "4px", whiteSpace: "pre-wrap" }}>
+                              {item.description}
+                            </div>
+                          )}
+                          
+                          {item.url && (
+                            <div style={{ fontSize: "10px", marginBottom: "4px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                              <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent-primary)", textDecoration: "none", pointerEvents: "auto" }} onClick={(e) => e.stopPropagation()}>
+                                {item.url}
+                              </a>
+                            </div>
+                          )}
+
                           <div style={{ display: "flex", justifyContent: "space-between", fontSize: "10px", fontFamily: "monospace", color: "var(--text-secondary)" }}>
                             <span style={{ textTransform: "uppercase" }}>X: {project.axes.x.name}</span>
                             <span style={{ color: "var(--text-primary)" }}>{item.x?.toFixed(1)}</span>

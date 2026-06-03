@@ -20,20 +20,22 @@ export function RightSidebar() {
 
   const sortedItems = useSortedItems(project?.items ?? [], sortConfig);
 
-  const handleAddItem = (name: string, description?: string) => {
+  const handleAddItem = (name: string, description?: string, url?: string, tags?: string[], memo?: string) => {
     if (!project) return;
-    dispatch({ type: "ADD_ITEM", projectId: project.id, name, description });
-    // If tags or memo were provided, update the item after creation
-    // (simplified: we add first, then the item gets created with name/desc)
+    dispatch({ 
+      type: "ADD_ITEM", 
+      projectId: project.id, 
+      item: { name, description, url, tags: tags ?? [], memo }
+    });
   };
 
-  const handleUpdateItem = (name: string, description?: string, tags?: string[], memo?: string) => {
+  const handleUpdateItem = (name: string, description?: string, url?: string, tags?: string[], memo?: string) => {
     if (!project || !editingItem) return;
     dispatch({
       type: "UPDATE_ITEM",
       projectId: project.id,
       itemId: editingItem.id,
-      updates: { name, description, tags: tags ?? [], memo },
+      updates: { name, description, url, tags: tags ?? [], memo },
     });
     setEditingItem(null);
   };
@@ -262,6 +264,7 @@ export function RightSidebar() {
           onSubmit={handleUpdateItem}
           initialName={editingItem.name}
           initialDescription={editingItem.description ?? ""}
+          initialUrl={editingItem.url ?? ""}
           initialTags={editingItem.tags}
           initialMemo={editingItem.memo ?? ""}
           mode="edit"

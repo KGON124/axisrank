@@ -62,6 +62,7 @@ export interface Item {
   id: string;
   name: string;
   description?: string;
+  url?: string;
   x: number | null;
   y: number | null;
   normalizedX?: number;
